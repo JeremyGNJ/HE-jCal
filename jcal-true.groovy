@@ -97,15 +97,16 @@ void getdata(){
                             eCount++
                             iCalMap.event.put(eCount.toString(),[:])
                         }
-                        if (eCount != 0 && dSplit[1].trim()!=null){
-                            if (dSplit[0].trim().contains("DTSTART")){
-				if (dSplit[0].contains("(UTC"){
-					//iCalMap.event[eCount.toString()].put("start",dSplit[1].trim())
+                     if (eCount != 0 && dSplit[1].trim()!=null){
+                     if (dSplit[0].trim().contains("DTSTART")){
+				        if (dSplit[0].contains("(UTC")){
+			    		//iCalMap.event[eCount.toString()].put("start",dSplit[1].trim())
     					iCalMap.event[eCount.toString()].put("start", "${dSplit[1].trim()} ${dSplit[2].trim()}")
 				}
-				else{
+				else {
 					iCalMap.event[eCount.toString()].put("start",dSplit[1].trim())
 				}
+                     }
                             else if (dSplit[0].trim().contains("DTEND")) iCalMap.event[eCount.toString()].put("end",dSplit[1].trim())
                             else if (dSplit[0].trim()=="LOCATION" && state.shLoc) iCalMap.event[eCount.toString()].put("location",dSplit[1].trim())
                             else if (dSplit[0].trim()=="STATUS") iCalMap.event[eCount.toString()].put("status",dSplit[1].trim())     //CONFIRMED or TENTATIVE
@@ -232,23 +233,6 @@ private timeHelp(data) {
 	
 //log.debug "timeHelp return=$zDate & $localTime & $dateTrim"     
     return [localTime, dateTrim,zDate,dateFriendly]
-
-
-// Function to check if an iCal date is today
-def isToday(String iCalDate) {
-    def dateFormat = new SimpleDateFormat("yyyyMMdd")
-    def today = Calendar.getInstance()
-    def iCalDateCalendar = Calendar.getInstance()
-    iCalDateCalendar.setTime(dateFormat.parse(iCalDate))
-
-    return today.get(Calendar.YEAR) == iCalDateCalendar.get(Calendar.YEAR) &&
-           today.get(Calendar.MONTH) == iCalDateCalendar.get(Calendar.MONTH) &&
-           today.get(Calendar.DAY_OF_MONTH) == iCalDateCalendar.get(Calendar.DAY_OF_MONTH)
 }
 
-// Example usage
-def iCalDate = "20240513" // iCal date in the format YYYYMMDD
-println("Is iCal date $iCalDate today? ${isToday(iCalDate)}")
 
-
-}
