@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat
 import java.util.TimeZone
 
 preferences {
-    input("icalink", "string", title: "ical link(s), seperate with a ;")
+    input("icalink", "string", title: "ical link(s), seperate with a ; (semicolon)")
     input("updatefeq", "number", title: "Polling Rate (minuites)\nDefault:60", default:60)
     input("shLoc", "bool", title: "Show location info?", default:false)
     input("maxEvt", "number", title: "max number of events to show, if you regualy see 'please select an atribute' on dashboad, reduce this number\nDefault:10", default:10)
@@ -122,62 +122,23 @@ void getdata(){
     String todaydate = new SimpleDateFormat("dd-MM-yy").format(today)
     log.debug "${today} & ${todaydate}"
     
-//need to re forcast dates prio to sorting
+//Sort Events by date
     log.debug "${iCalMap.event.size()}"
     iCalMap.event = iCalMap.event.values()sort{ a, b -> a.start <=> b.start} //sort the data
     log.debug "sorted ${iCalMap.event.size()}"
     iCalMap.event = iCalMap.event.unique()
     log.debug "filltered ${iCalMap.event.size()}"
-    /*
-    iCalMap.event.each{
-        if (it.start == null) it.start = it.end // not used that i know off
-        if (it.end == null) it.end = it.start //used some envents didnt have a end date
-         (t,d,z) = timeHelp(it.start)
-          fullstart = z
 
-          (t,d,z) = timeHelp(it.end)
-          fullend = z
-/*
-        if (it.repeatFreq){
-           
-            if (it.repeatFreq.contains("DAILY")&& !it.repeatFreq.contains("INTERVAL") && it.repeatNum < 0){ //RRULE:FREQ=DAILY;WKST=TU // SEQUENCE:1
-                log.debug "${fullstart} and ${it.repeatNum} and ${it.repeatFreq} and ${it.repeatNum}"
-                fullstart = fullstart + (it.repeatNum-1).days //add dd to time string
-            }
-            /*
-            else if (it.repeatFreq.contains("WEEKLY")) { //RRULE:FREQ=WEEKLY;WKST=MO;UNTIL=20210519T000000Z;INTERVAL=1;BYDAY=TU
-                log.debug "${it.start} and ${it.repeatNum-1*7} and ${it.repeatFreq}"
-                it.start = it.start + (it.repeatNum-1*7).days //intervall from the string it.repeatFreq.find("INTERVAL=")+1charcter  //add dd to time string
-            }
-            else if (it.repeatFreq.contains("monthly")) { // no data yet
-                it.start = it.start + (it.repeatNum-1).month //add MM to time string
-            }
-            else if (it.repeatFreq.contains("yearly")) { // no data yet
-                it.start = it.start + (it.repeatNum-1).year //add yyyy to time string
-            }
-
-        }
-    
-    }
-*/   
-   //iCalMap.event = iCalMap.event.values()sort{ a, b -> a.start <=> b.start} //sort the data
-//    log.debug iCalMap.event.size()
-//    iCalMap.event = iCalMap.event.unique()
-//    log.debug "fileter sorted again ${iCalMap.event.size()}"
-
-    
     Integer MaxCount = 0
-     sendEvent(name: "CharCount", value: "Working")
+    sendEvent(name: "CharCount", value: "Working")
     attrString = "<table class=iCal>"
     curWorkingDate = new SimpleDateFormat("yyyyMMdd").format(today)
 	curTodayCheck = new SimpleDateFormat("yyyyMMdd").format(today)
+	curTomorrowCheck = curTodayCheck + 1
 	//sendEvent(name:"debug",value:curWorkingDate)
     iCalMap.event.each{
 		if (MaxCount < state.maxEvt){
-          // if (it.start == null) it.start = it.end // not used that i know off
-          //if (it.end == null) it.end = it.start //used some envents didnt have a end date
-
-			(t,d,z,f) = timeHelp(it.start)
+      			(t,d,z,f) = timeHelp(it.start)
 			datefriendly = f
 			fullstart = z
 			datestart = d
@@ -194,7 +155,7 @@ void getdata(){
 			  datestart = d
 			  timestart = t
 			 */
-			if (today<=fullstart || today<=fullend) { //and not canciled?
+			if (today<=fullstart || today<=fullend) { 
 				sendEvent(name: "debug", value: datestart + " zzzz " + curTodayCheck)
 				MaxCount = MaxCount +1
 				//thestart = SimpleDateFormat("yyyyMMdd").parse(it.start)
@@ -214,7 +175,7 @@ void getdata(){
 					curWorkingDate = datestart
 				}
 				else{}
-			    if (it.start.indexOf("T") == -1) {
+			        if (it.start.indexOf("T") == -1) {
 					sendEvent(name: "tileAttr", value: "test" + MaxCount +" - 2 - true")
 					attrString+="<tr><td class=D>All Day</td><td class=cA>"+it.summary+"</td></tr>"
 				} //all day event
