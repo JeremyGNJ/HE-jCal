@@ -211,7 +211,7 @@ void getdata(){
 private timeHelp(data) {
 //log.debug "timeHelp data= $data"
     Date zDate
-    if (data.contains("Z"){
+    if (data.contains("Z")){
 	if (data.contains ("UTC")){
 	// Extract timezone from the string
 	def timeZoneMatcher = data =~ /TZID="([^"]+)":/
@@ -226,7 +226,7 @@ private timeHelp(data) {
 	zDate = dateFormat.parse(data)
 	}
 	else zDate =  toDateTime(data)
-    }) 
+    } 
     else if (data.contains("T")) zDate = new SimpleDateFormat("yyyyMMdd'T'kkmmss").parse(data)
     else zDate = new SimpleDateFormat("yyyyMMdd").parse(data)
 //log.debug "zDate= $zDate"
