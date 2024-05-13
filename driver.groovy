@@ -21,6 +21,7 @@ metadata {
 }
 
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.TimeZone
 
 preferences {
@@ -210,7 +211,21 @@ void getdata(){
 private timeHelp(data) {
 //log.debug "timeHelp data= $data"
     Date zDate
-    if (data.contains("Z")) zDate =  toDateTime(data)
+    if (data.contains("(UTC")) {
+	// Extract timezone from the string
+	def timeZoneMatcher = data =~ /TZID="([^"]+)":/
+	def timeZoneString = timeZoneMatcher[0][1]
+	// Parse the timezone string to get the timezone offset
+	def timeZoneOffsetMatcher = timeZoneString =~ /\(UTC([-+]\d{2}:\d{2})\)/
+	def timeZoneOffset = timeZoneOffsetMatcher[0][1]
+	// Create SimpleDateFormat with timezone
+	def dateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss")
+	dateFormat.setTimeZone(TimeZone.getTimeZone("GMT${timeZoneOffset}"))
+	// Parse the date string
+	zDate = dateFormat.parse(data)
+	 
+    }
+    else if (data.contains("Z")) zDate =  toDateTime(data)
     else if (data.contains("T")) zDate = new SimpleDateFormat("yyyyMMdd'T'kkmmss").parse(data)
     else zDate = new SimpleDateFormat("yyyyMMdd").parse(data)
 //log.debug "zDate= $zDate"
@@ -220,4 +235,8 @@ private timeHelp(data) {
 	
 //log.debug "timeHelp return=$zDate & $localTime & $dateTrim"     
     return [localTime, dateTrim,zDate,dateFriendly]
+
+
+
+
 }
