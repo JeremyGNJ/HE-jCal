@@ -72,6 +72,7 @@ void getdata(){
     HashMap iCalMap = [:] 
     Integer eCount = 0
     iCalMap.put("event",[:])
+    log.debug icalmap
     try {
         icalinks = icalink.split(";")
         icalinks.each { it ->
@@ -97,7 +98,14 @@ void getdata(){
                             iCalMap.event.put(eCount.toString(),[:])
                         }
                         if (eCount != 0 && dSplit[1].trim()!=null){
-                            if (dSplit[0].trim().contains("DTSTART")) iCalMap.event[eCount.toString()].put("start",dSplit[1].trim())
+                            if (dSplit[0].trim().contains("DTSTART")){
+				if (dSplit[0].contains("(UTC"){
+					//iCalMap.event[eCount.toString()].put("start",dSplit[1].trim())
+    					iCalMap.event[eCount.toString()].put("start", "${dSplit[1].trim()} ${dSplit[2].trim()}")
+				}
+				else{
+					iCalMap.event[eCount.toString()].put("start",dSplit[1].trim())
+				}
                             else if (dSplit[0].trim().contains("DTEND")) iCalMap.event[eCount.toString()].put("end",dSplit[1].trim())
                             else if (dSplit[0].trim()=="LOCATION" && state.shLoc) iCalMap.event[eCount.toString()].put("location",dSplit[1].trim())
                             else if (dSplit[0].trim()=="STATUS") iCalMap.event[eCount.toString()].put("status",dSplit[1].trim())     //CONFIRMED or TENTATIVE
