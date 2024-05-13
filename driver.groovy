@@ -3,9 +3,9 @@ thankyou TheBearMay
 */
 metadata {
     definition (
-        name: "ical-Reader-Trim", 
-        namespace: "mark-c-cuk", 
-        author: "mark c",
+        name: "jcal-Reader", 
+        namespace: "jeremygnj", 
+        author: "JeremyG	",
         importUrl:"https://raw.githubusercontent.com/Mark-C-uk/Hubitat/master/ical"
     ) {
         capability "Actuator"
