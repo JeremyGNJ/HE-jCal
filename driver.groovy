@@ -1,12 +1,13 @@
 /*
 thankyou TheBearMay
+thankyou mark-c-cuk
 */
 metadata {
     definition (
         name: "jcal-Reader", 
         namespace: "jeremygnj", 
-        author: "JeremyG	",
-        importUrl:"https://raw.githubusercontent.com/Mark-C-uk/Hubitat/master/ical"
+        author: "JeremyG",
+        importUrl:"https://github.com/JeremyGNJ/HE-jCal/edit/main/driver.groovy"
     ) {
         capability "Actuator"
         capability "Sensor"
