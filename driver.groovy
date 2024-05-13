@@ -168,6 +168,12 @@ void getdata(){
 						attrString+="<tr><td class=rT colspan=2>"+"TODAY"+"</td></tr> "
 						//attrString+="<div class=rT>TODAY</div>"
 				}
+				else if (datestart == curTomorrowCheck)  { // > 7 days
+					sendEvent(name: "tileAttr", value: "test" + MaxCount +" - 1 - false")
+					attrString+="<tr><td class=rD colspan=2>"+"TOMORROW"+"</td></tr>" //start date
+					//attrString+="<div class=rD>"+datefriendly+"</div>" //start date
+					curWorkingDate = datestart
+				}
 				else if (datestart != curWorkingDate)  { // > 7 days
 					sendEvent(name: "tileAttr", value: "test" + MaxCount +" - 1 - false")
 					attrString+="<tr><td class=rD colspan=2>"+datefriendly+"</td></tr>" //start date
