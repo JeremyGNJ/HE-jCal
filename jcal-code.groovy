@@ -23,7 +23,8 @@ metadata {
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.TimeZone
-
+import java.util.Calendar
+import java.time.LocalDate
 
 preferences {
     input("icalink", "string", title: "ical link(s)\n(seperate with a ; character")
@@ -150,10 +151,7 @@ void getdata(){
     attrString = "<table class=iCal>"
     curWorkingDate = new SimpleDateFormat("yyyyMMdd").format(today)
 	curTodayCheck = new SimpleDateFormat("yyyyMMdd").format(today)
-	// will add tomorrow
-    curTomorrowCheck = curTodayCheck + 1
-    log.debug "Tomorrow" + curTomorrowCheck
-	//sendEvent(name:"debug",value:curWorkingDate)
+    curTomorrowCheck = new SimpleDateFormat("yyyyMMdd").format(today.plus(1))
     iCalMap.event.each{
 		if (MaxCount < state.maxEvt){
       		(t,d,z,f) = timeHelp(it.start)
@@ -184,24 +182,20 @@ void getdata(){
                     MaxCount = MaxCount +1
                     //thestart = SimpleDateFormat("yyyyMMdd").parse(it.start)
                     //sendEvent(name: "debug", value: thestart + " zzzz " + curTodayCheck + " yyy " + fullstart + " = " + datestart)
-                    if (datestart == curTodayCheck){
+                    log.debug "Checking " + datefriendly + " " + datestart  + " " + fullstart
+                    dayCheck = new SimpleDateFormat("yyyyMMdd").format(fullstart)
+                    
+                    if (dayCheck == curTodayCheck){
                         sendEvent(name: "tileAttr", value: "test" + MaxCount +" -1" + datestart + " - " + datefriendly)	 
-                            //today or date              
-                            //if (todaydate==datestart){ //today events
-                            //sendEvent(name: "tileAttr", value: "test" + MaxCount +" - 1 - true")
-                            attrString+="<tr><td class=rT colspan=2>"+"TODAY"+"</td></tr> "
-                            //attrString+="<div class=rT>TODAY</div>"
-                    }
-                    else if (datestart == curTomorrowCheck)  { // > 7 days
+                        attrString+="<tr><td class=rJ colspan=2>"+"TODAY"+"</td></tr>" //start date
+                                                }
+                    else if (dayCheck == curTomorrowCheck)  { // > 7 days
                         sendEvent(name: "tileAttr", value: "test" + MaxCount +" - 1 - false")
-                        attrString+="<tr><td class=rD colspan=2>"+"TOMORROW"+"</td></tr>" //start date
-                        //attrString+="<div class=rD>"+datefriendly+"</div>" //start date
-                        curWorkingDate = datestart
+                        attrString+="<tr><td class=rW colspan=2>"+"TOMORROW"+"</td></tr>" //start date
                     }
                     else if (datestart != curWorkingDate)  { // > 7 days
                         sendEvent(name: "tileAttr", value: "test" + MaxCount +" - 1 - false")
                         attrString+="<tr><td class=rD colspan=2>"+datefriendly+"</td></tr>" //start date
-                        //attrString+="<div class=rD>"+datefriendly+"</div>" //start date
                         curWorkingDate = datestart
                     }
                     else{}
