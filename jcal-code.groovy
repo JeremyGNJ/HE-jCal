@@ -16,7 +16,7 @@ metadata {
 
         attribute "tileAttr", "string" 
         attribute "CharCount", "string"
-		    attribute "debug", "string" 
+	attribute "debug", "string" 
     }   
 }
 
