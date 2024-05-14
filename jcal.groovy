@@ -23,9 +23,7 @@ metadata {
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.TimeZone
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Calendar
+
 
 preferences {
     input("icalink", "string", title: "ical link(s), seperate with a ; (semicolon)")
