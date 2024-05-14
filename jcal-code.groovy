@@ -188,8 +188,8 @@ void getdata(){
                     if (dayCheck == curTodayCheck){
                         sendEvent(name: "tileAttr", value: "test" + MaxCount +" -1" + datestart + " - " + datefriendly)	 
                         attrString+="<tr><td class=rJ colspan=2>"+"TODAY"+"</td></tr>" //start date
-                                                }
-                    else if (dayCheck == curTomorrowCheck)  { // > 7 days
+                    }
+                    else if (dayCheck == curTomorrowCheck)  { 
                         sendEvent(name: "tileAttr", value: "test" + MaxCount +" - 1 - false")
                         attrString+="<tr><td class=rW colspan=2>"+"TOMORROW"+"</td></tr>" //start date
                     }
