@@ -7,7 +7,7 @@ metadata {
         name: "jcal-Reader", 
         namespace: "jeremygnj", 
         author: "JeremyG",
-        importUrl:"https://raw.githubusercontent.com/JeremyGNJ/HE-jCal/main/driver.groovy"
+        importUrl:"https://raw.githubusercontent.com/JeremyGNJ/HE-jCal/main/jcal-code.groovy"
     ) {
         capability "Actuator"
         capability "Sensor"
