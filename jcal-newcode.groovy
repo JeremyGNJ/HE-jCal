@@ -70,31 +70,69 @@ def initialize(){
 
 void getdata(){
     log.debug "${device} get data"
-//    Map reqParams = [
-//            uri: icalink,
-//            timeout: 10
-//        ]
     HashMap iCalMap = [:] 
     Integer eCount = 0
     iCalMap.put("event",[:])
     log.debug icalmap
     try {
         icalinks = icalink.split(";")
+        def events = []
         icalinks.each { it ->
             if(it.startsWith(" ")) it = it.replaceFirst(" ","")
             Map reqParams = [
                 uri: it,
                 timeout: 10
             ]
- 
-        httpGet(reqParams) { resp ->
-            if(resp.status == 200) {
-                log.debug "rest status${resp.status}"
-                wkStr = resp.data
-                //iCalMap.put("event",[:])
-                // Integer eCount = 0
-                wkStr.eachLine{
-                    if(!it.startsWith(" ")){
+            httpGet(reqParams) { resp ->
+                if(resp.status == 200) {
+                    log.debug "rest status${resp.status}"
+                    icalString = resp.data
+                    def lines = icalString.readLines()
+                    def currentEvent = [:]
+                    lines.each { line ->
+                        if (line.startsWith('BEGIN:VEVENT')) {
+                            currentEvent = [:]
+                        } 
+                        else if (line.startsWith('END:VEVENT')) {
+                            events << currentEvent
+                        }
+                        else {
+                            def parts = line.split(':', 2)
+                            currentEvent[parts[0]] = parts[1]
+                        }
+                    }
+                }  //end 200 resp
+                else { // not 200
+                log.warn "${device} Response code ${resp.status}"
+                }
+            } //end http get
+        } //end each ical
+    } //end try
+}//end Getdata
+
+def formatevents(event){
+
+
+
+
+}
+
+
+
+
+events.each { event ->
+    def nextOccurrence = findNextOccurrence(event, startDate)
+    if (nextOccurrence) {
+        println("Next occurrence of '${event['SUMMARY']}': ${nextOccurrence.format("yyyyMMdd'T'HHmmss'Z'")}")
+    }
+}    
+                
+def PEvents = []
+
+                
+                
+                
+                
                     List dSplit= it.split(":")
                     if(dSplit.size()>1){
                         if (dSplit[0].trim()=="BEGIN" && dSplit[1].trim()=="VEVENT") {
@@ -112,27 +150,12 @@ void getdata(){
 				                }
                             }
                             else if (dSplit[0].trim().contains("DTEND")) iCalMap.event[eCount.toString()].put("end",dSplit[1].trim())
-                            else if (dSplit[0].trim()=="LOCATION" && state.shLoc) iCalMap.event[eCount.toString()].put("location",dSplit[1].trim())
+                            else if (dSplit[0].trim()=="LOCATION" && state. shLoc) iCalMap.event[eCount.toString()].put("location",dSplit[1].trim())
                             else if (dSplit[0].trim()=="STATUS") iCalMap.event[eCount.toString()].put("status",dSplit[1].trim())     //CONFIRMED or TENTATIVE
                             else if (dSplit[0].trim()=="SUMMARY") iCalMap.event[eCount.toString()].put("summary",dSplit[1].trim())
                             else if (dSplit[0].trim()=="SEQUENCE") iCalMap.event[eCount.toString()].put("repeatNum",dSplit[1].trim())
                             else if (dSplit[0].trim()=="RRULE") iCalMap.event[eCount.toString()].put("repeatFreq",dSplit[1].trim())
-                        }
-                    }
-                    else { // blank - location, attiees etc
-                    }
-                  }
-                }
-            } //end 200 resp
-            else { // not 200
-                log.warn "${device} Response code ${resp.status}"
-            }
-        } //end http get
-    } //end each ical
-    } //end try
-    catch (e) {
-        log.warn "${device} CATCH $e"
-    }
+
     
     
     Date today = new Date()
