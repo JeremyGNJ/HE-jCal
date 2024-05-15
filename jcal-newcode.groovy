@@ -4,7 +4,7 @@ thankyou mark-c-cuk
 */
 metadata {
     definition (
-        name: "jcal-Reader", 
+        name: "jcal-new", 
         namespace: "jeremygnj", 
         author: "JeremyG",
         importUrl:"https://raw.githubusercontent.com/JeremyGNJ/HE-jCal/main/jcal-code.groovy"
@@ -142,7 +142,10 @@ void getdata(){
     //Sort Events by date
     log.debug "${iCalMap.event.size()}"
     iCalMap.event = iCalMap.event.values()sort{ a, b -> a.start <=> b.start} //sort the data
+    //from chatgpt
+    //iCalMap.event = iCalMap.event.collectEntries { key, value -> [key, value.sort { a, b -> a.start <=> b.start }] }
     log.debug "sorted ${iCalMap.event.size()}"
+    log.debug "itmes ---- ${iCalMap.event.summary} --- ${iCalMap.event.start}"
     //iCalMap.event = iCalMap.event.unique()
     //log.debug "filltered ${iCalMap.event.size()}"
 
