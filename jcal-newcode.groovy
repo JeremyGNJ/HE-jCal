@@ -96,6 +96,39 @@ void getdata(){
                         else if (line.startsWith('END:VEVENT')) {
                             events << currentEvent
                         }
+                        else if(line.startsWith('RRULE')){
+                        
+ 
+   def dtstart = event['DTSTART'].substring(8, 14)
+    def frequency = event['RRULE'].split(';')[0].split('=')[1]
+    def count = event['RRULE'].split(';')[1].split('=')[1] as int
+    
+    def current = new Date.parse("yyyyMMddHHmmss", dtstart)
+    while (current.before(startDate)) {
+        if (frequency == 'DAILY') {
+            current += 1.days
+        } else if (frequency == 'WEEKLY') {
+            current += 7.days
+        } else if (frequency == 'MONTHLY') {
+            current = current.plusMonths(1)
+        } else if (frequency == 'YEARLY') {
+            current = current.plusYears(1)
+        }
+        count--
+        if (count == 0) {
+            return null
+        }
+    }
+    return current
+
+
+
+
+
+
+
+                        }
+
                         else {
                             def parts = line.split(':', 2)
                             currentEvent[parts[0]] = parts[1]

@@ -1,6 +1,5 @@
 {
     "recommendations": [
-        "equinusocio.vsc-material-theme",
         "zhuangtongfa.material-theme",
         "ms-vscode.powershell",
         "github.copilot"
