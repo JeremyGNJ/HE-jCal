@@ -99,6 +99,10 @@ void getdata(){
                         else if(line.startsWith('RRULE')){
                         
  
+
+
+
+ 
    def dtstart = event['DTSTART'].substring(8, 14)
     def frequency = event['RRULE'].split(';')[0].split('=')[1]
     def count = event['RRULE'].split(';')[1].split('=')[1] as int
